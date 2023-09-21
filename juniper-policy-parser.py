@@ -7,11 +7,11 @@ import os
 
 #data structures
 
-#This list will hold all policies as list elements.
-#Elements of this will be based on 'policy' data strcuture (dictionary)
+#This list will hold all policies as a list.
+#Elements of this list will be based on 'policy' data strcuture (dictionary)
 policies_set=[]
 
-#need header for CSV export
+#Thi is need header for CSV export
 policy_description=['VSYS','from-zone','to-zone',"policy-name", 'source-address','destination-address','application','source-identity',"global-from-zone","global-to-zone","action"]
 
 #Main data strcutre describing policy
@@ -48,17 +48,21 @@ def find_policy(l_vsys, l_from_zone, l_to_zone, l_policy_name):
 
 
 #main script
-
+#Ensuring that there are arguments provided to the scrip and not let run without it
 parser = argparse.ArgumentParser(prog='juniper-policy-parser',description='Script takes 1 argument of a config file (typically .conf) and outputs CSV file with ".csv" extension with the same name as orginal file.',epilog='by Lukasz Awsiukiewicz, biuro@la-tech.pl')
 parser.add_argument('-f', '--file', help='%(prog)s --filein=<juniper conf file in set format>', required=True)
 a1 = parser.parse_args()
 
+#test out if provided file exist
 f_in_name=vars(a1)["file"]
 if not(os.path.exists(f_in_name)):
     print("file not found!")
     exit()
 f_out_name=f_in_name + ".csv"
 
+#read whole content of a file
+#Please note that depending on where export was done UTF8 may have to be replaced by like CP1250 or something else.
+#assuming export was done on linux system
 with open(f_in_name, "r", encoding="utf8") as f:
     for line in f.readlines():
         #filter out configuration file based on 3 filter settings:
@@ -181,6 +185,9 @@ with open(f_in_name, "r", encoding="utf8") as f:
 
 
 #export data to the file in CSV format
+#depending on encoding newline char may differ. On Linux there are 2 chars for new line thus if using
+#linux encoded file without this it will return empty lines after valid line due to encoding issue.
+#if file is in different encoding then either newline term needs to be removed or replaced by valid char
 with open(f_out_name,"w",newline='') as f:
     csv_writer = csv.DictWriter(f,fieldnames=policy_description,delimiter=';')
     csv_writer.writeheader()
