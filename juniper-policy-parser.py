@@ -8,7 +8,7 @@ import os
 #data structures
 
 #This list will hold all policies as list elements.
-#Elements of this be based on 'policy' data strcuture (disctionary)
+#Elements of this will be based on 'policy' data strcuture (dictionary)
 policies_set=[]
 
 #need header for CSV export
@@ -50,7 +50,7 @@ def find_policy(l_vsys, l_from_zone, l_to_zone, l_policy_name):
 #main script
 
 parser = argparse.ArgumentParser(prog='juniper-policy-parser',description='Script takes 1 argument of a config file (typically .conf) and outputs CSV file with ".csv" extension with the same name as orginal file.',epilog='by Lukasz Awsiukiewicz, biuro@la-tech.pl')
-parser.add_argument('-f', '--file', help='%(prog)s --filein=<juniper conf file in set format>')
+parser.add_argument('-f', '--file', help='%(prog)s --filein=<juniper conf file in set format>', required=True)
 a1 = parser.parse_args()
 
 f_in_name=vars(a1)["file"]
